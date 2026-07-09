@@ -51,8 +51,59 @@
     padding: 1rem 1.2rem;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.95rem;
-    overflow-x: auto;
+    overflow: visible;
     margin: 2rem 0;
+    display: inline-block;
+    width: fit-content;
+  }
+  .install-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+  .install-command {
+    white-space: nowrap;
+  }
+  .copy-btn {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--fg);
+    border-radius: 6px;
+    padding: 0.45rem;
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.02s ease;
+    flex-shrink: 0;
+  }
+  .copy-btn:hover {
+    background: color-mix(in srgb, var(--fg) 8%, transparent);
+  }
+  .copy-btn:active {
+    transform: translateY(1px);
+  }
+  .copy-btn:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--fg) 35%, transparent);
+    outline-offset: 2px;
+  }
+  .copy-btn .icon {
+    width: 1rem;
+    height: 1rem;
+    display: none;
+  }
+  .copy-btn .icon-copy {
+    display: block;
+  }
+  .copy-btn.is-copied .icon-copy {
+    display: none;
+  }
+  .copy-btn.is-copied .icon-check {
+    display: block;
   }
   table {
     border-collapse: collapse;
@@ -69,14 +120,51 @@
 </style>
 <script>
 
-// Code to copy text to clipboard
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).then(function() {
-    console.log('Text copied to clipboard');
-  }).catch(function(err) {
-    console.error('Could not copy text: ', err);
-  });
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (_) {
+    const tempTextarea = document.createElement('textarea');
+    tempTextarea.value = text;
+    tempTextarea.setAttribute('readonly', '');
+    tempTextarea.style.position = 'absolute';
+    tempTextarea.style.left = '-9999px';
+    document.body.appendChild(tempTextarea);
+    tempTextarea.select();
+    const success = document.execCommand('copy');
+    document.body.removeChild(tempTextarea);
+    return success;
+  }
 }
+
+window.addEventListener('DOMContentLoaded', function() {
+  const copyButton = document.getElementById('copy-install');
+  const installCommand = document.getElementById('install-command');
+
+  if (!copyButton || !installCommand) return;
+
+  copyButton.addEventListener('click', async function() {
+    const text = installCommand.textContent.trim();
+    const copied = await copyToClipboard(text);
+
+    if (!copied) {
+      copyButton.setAttribute('aria-label', 'Échec de copie');
+      setTimeout(function() {
+        copyButton.setAttribute('aria-label', 'Copier la commande d\'installation');
+      }, 1200);
+      return;
+    }
+
+    copyButton.classList.add('is-copied');
+    copyButton.setAttribute('aria-label', 'Commande copiée');
+
+    setTimeout(function() {
+      copyButton.classList.remove('is-copied');
+      copyButton.setAttribute('aria-label', 'Copier la commande d\'installation');
+    }, 1200);
+  });
+});
 
 </script>
 </head>
@@ -85,12 +173,21 @@ function copyToClipboard(text) {
   <h1>Nova</h1>
   <p class="tagline">Lance une commande, surveille-la, redémarre-la à la volée.</p>
 
-  <div class="install">
-    <div id="install-command">
-      curl -fsSL https://raw.githubusercontent.com/Ekith/nova/main/install.sh | bash
+  <div class="install-row">
+    <div class="install">
+      <div id="install-command" class="install-command">
+        curl -fsSL https://raw.githubusercontent.com/Ekith/nova/main/install.sh | bash
+      </div>
     </div>
-    <button onclick="copyToClipboard(document.getElementById('install-command').innerText)">Copier</button>
-
+    <button id="copy-install" class="copy-btn" type="button" aria-label="Copier la commande d'installation">
+      <svg class="icon icon-copy" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>
+        <rect x="5" y="5" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>
+      </svg>
+      <svg class="icon icon-check" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 12.5L10 17.5L19 8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </button>
   </div>
 
   <p>Une fois installé :</p>
