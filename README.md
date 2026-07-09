@@ -5,7 +5,7 @@ Lance une commande et la surveille en arrière-plan : redémarrage automatique s
 ## Installation
 
 ```bash
-curl -fsSL https://ekith.github.io/nova/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Ekith/nova/main/install.sh | bash
 ```
 
 Installe `nova` dans `~/.local/bin` et sa complétion bash dans `~/.local/share/bash-completion/completions`.
