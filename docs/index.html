@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nova</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #6b6b6b;
+    --code-bg: #f4f4f5;
+    --border: #e2e2e2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --fg: #f0f0f0;
+      --muted: #9a9a9a;
+      --code-bg: #1e2126;
+      --border: #2c2f36;
+    }
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+  }
+  main {
+    max-width: 640px;
+    width: 100%;
+  }
+  h1 {
+    font-size: 2.4rem;
+    margin-bottom: 0.2rem;
+  }
+  p.tagline {
+    color: var(--muted);
+    margin-top: 0;
+    font-size: 1.1rem;
+  }
+  .install {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 2rem 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  td, th {
+    text-align: left;
+    padding: 0.4rem 0.8rem 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  a {
+    color: inherit;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>nova</h1>
+  <p class="tagline">Lance une commande, surveille-la, redémarre-la à la volée.</p>
+
+  <div class="install">curl -fsSL https://ekith.github.io/nova/install.sh | bash</div>
+
+  <p>Une fois installé :</p>
+  <div class="install">nova &lt;commande à lancer&gt;</div>
+
+  <table>
+    <tr><th>Touche</th><th>Action</th></tr>
+    <tr><td>R</td><td>Redémarrer le processus</td></tr>
+    <tr><td>K</td><td>Arrêter nova</td></tr>
+    <tr><td>C</td><td>Effacer la console</td></tr>
+    <tr><td>N</td><td>Nettoyer puis redémarrer le processus</td></tr>
+  </table>
+
+  <p><a href="https://github.com/Ekith/nova">Code source sur GitHub</a></p>
+</main>
+</body>
+</html>
