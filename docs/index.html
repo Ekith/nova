@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>nova</title>
+<title>Nova</title>
 <style>
   :root {
     color-scheme: light dark;
@@ -67,16 +67,36 @@
     color: inherit;
   }
 </style>
+<script>
+
+// Code to copy text to clipboard
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    console.log('Text copied to clipboard');
+  }).catch(function(err) {
+    console.error('Could not copy text: ', err);
+  });
+}
+
+</script>
 </head>
 <body>
 <main>
-  <h1>nova</h1>
+  <h1>Nova</h1>
   <p class="tagline">Lance une commande, surveille-la, redémarre-la à la volée.</p>
 
-  <div class="install">curl -fsSL https://raw.githubusercontent.com/Ekith/nova/main/install.sh | bash</div>
+  <div class="install">
+    <div id="install-command">
+      curl -fsSL https://raw.githubusercontent.com/Ekith/nova/main/install.sh | bash
+    </div>
+    <button onclick="copyToClipboard(document.getElementById('install-command').innerText)">Copier</button>
+
+  </div>
 
   <p>Une fois installé :</p>
-  <div class="install">nova &lt;commande à lancer&gt;</div>
+  <div class="install">
+    nova &lt;commande à lancer&gt;
+  </div>
 
   <table>
     <tr><th>Touche</th><th>Action</th></tr>
