@@ -1,5 +1,5 @@
 
-
+VERSION="1.0.0"
 
 REPO_RAW="https://raw.githubusercontent.com/Ekith/nova/main"
 BIN_DIR="$HOME/.local/bin"
@@ -19,6 +19,10 @@ case "${1:-}" in
         rm -f "$BIN_DIR/nova"
         rm -f "$COMPLETION_DIR/nova"
         echo "nova uninstalled."
+        exit 0
+        ;;
+    --version|-v)
+        echo "nova version $VERSION"
         exit 0
         ;;
 esac
