@@ -1,4 +1,4 @@
-# nova
+<h1><img src="docs/assets/logo.svg" alt="" width="32" height="32" align="center"> nova</h1>
 
 Lance une commande et la surveille en arrière-plan : redémarrage automatique si elle s'arrête, et raccourcis clavier pour la piloter en direct.
 

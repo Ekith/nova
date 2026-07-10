@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="nova-logo-title">
+  <title id="nova-logo-title">Nova</title>
+  <defs>
+    <linearGradient id="novaBurst" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd23f"/>
+      <stop offset="45%" stop-color="#ff6b35"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="novaRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b35"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- orbit / restart loop -->
+  <path d="M129.07,20.13 A85,85 0 1,1 26.4,57.5"
+        fill="none" stroke="url(#novaRing)" stroke-width="7"
+        stroke-linecap="round" opacity="0.9"/>
+  <path d="M26.4,57.5 L21.9,44.9 L34.1,49.9 Z" fill="#a855f7" opacity="0.9"/>
+
+  <!-- companion sparkle -->
+  <path d="M40,25 L42.12,32.88 L50,35 L42.12,37.12 L40,45 L37.88,37.12 L30,35 L37.88,32.88 Z"
+        fill="url(#novaBurst)" opacity="0.85"/>
+
+  <!-- central nova burst -->
+  <path d="M100,45 L114.14,85.86 L155,100 L114.14,114.14 L100,155 L85.86,114.14 L45,100 L85.86,85.86 Z"
+        fill="url(#novaBurst)"/>
+</svg>
