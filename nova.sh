@@ -1,6 +1,28 @@
 
 
 
+REPO_RAW="https://raw.githubusercontent.com/Ekith/nova/main"
+BIN_DIR="$HOME/.local/bin"
+COMPLETION_DIR="$HOME/.local/share/bash-completion/completions"
+
+case "${1:-}" in
+    --upgrade|-u)
+        echo "Upgrading nova..."
+        curl -fsSL "$REPO_RAW/nova.sh" -o "$BIN_DIR/nova"
+        chmod +x "$BIN_DIR/nova"
+        curl -fsSL "$REPO_RAW/nova_completion.bash" -o "$COMPLETION_DIR/nova"
+        echo "nova upgraded."
+        exit 0
+        ;;
+    --uninstall)
+        echo "Uninstalling nova..."
+        rm -f "$BIN_DIR/nova"
+        rm -f "$COMPLETION_DIR/nova"
+        echo "nova uninstalled."
+        exit 0
+        ;;
+esac
+
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <command_to_run>"
     exit 1
