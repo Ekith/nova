@@ -26,3 +26,11 @@ Une fois lancé :
 | `N` | Nettoyer puis redémarrer le processus |
 
 Le processus est aussi redémarré automatiquement s'il s'arrête tout seul.
+
+## Gestion
+
+```bash
+nova --upgrade    # ou nova -u : met à jour nova vers la dernière version
+nova --uninstall  # désinstalle nova
+nova --version    # ou nova -v : affiche la version installée
+```
