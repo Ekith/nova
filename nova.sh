@@ -1,4 +1,6 @@
 
+echo -n "nova" > /proc/self/comm 2>/dev/null
+
 VERSION="1.0.3"
 
 REPO_RAW="https://raw.githubusercontent.com/Ekith/nova/release"
