@@ -1,5 +1,5 @@
 
-VERSION="1.0.1"
+VERSION="1.0.2"
 
 REPO_RAW="https://raw.githubusercontent.com/Ekith/nova/release"
 BIN_DIR="$HOME/.local/bin"
