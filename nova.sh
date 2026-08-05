@@ -82,9 +82,22 @@ launch_process() {
     echo_information_keybind
 }
 
+get_all_pids() {
+    local pid=$1
+    local children
+    children=$(pgrep -P "$pid")
+    echo "$pid"
+    for child in $children; do
+        get_all_pids "$child"
+    done
+}
+
 kill_process() {
     echo "Killing process with PID: $process_pid"
-    kill $process_pid
+
+    pids=$(get_all_pids "$process_pid")
+
+    kill $pids
 }
 
 clean_up() {
