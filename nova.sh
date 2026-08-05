@@ -6,13 +6,30 @@ BIN_DIR="$HOME/.local/bin"
 COMPLETION_DIR="$HOME/.local/share/bash-completion/completions"
 
 case "${1:-}" in
+    --help|-h)
+        echo "Usage: nova <commande_à_lancer>"
+        echo ""
+        echo "Options:"
+        echo "  -h, --help               Affiche cette aide"
+        echo "  -v, --version            Affiche la version installée"
+        echo "  -u, --upgrade            Met à jour nova vers la dernière release"
+        echo "  -i, --install <version>  Installe une version précise de nova"
+        echo "      --uninstall          Désinstalle nova"
+        exit 0
+        ;;
     --upgrade|-u)
         echo "Upgrading nova..."
-        curl -fsSL "$REPO_RAW/nova.sh" -o "$BIN_DIR/nova"
-        chmod +x "$BIN_DIR/nova"
-        curl -fsSL "$REPO_RAW/nova_completion.bash" -o "$COMPLETION_DIR/nova"
-        echo "nova upgraded."
-        exit 0
+        curl -fsSL "$REPO_RAW/install.sh" | bash
+        exit $?
+        ;;
+    --install|-i)
+        version="${2:-}"
+        if [ -z "$version" ]; then
+            echo "Usage: nova --install <version>" >&2
+            exit 1
+        fi
+        curl -fsSL "$REPO_RAW/install.sh" | bash -s -- "$version"
+        exit $?
         ;;
     --uninstall)
         echo "Uninstalling nova..."

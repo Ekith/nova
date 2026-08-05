@@ -7,7 +7,7 @@ _nova_completion() {
 
     local cur=${COMP_WORDS[COMP_CWORD]}
     if [ $COMP_CWORD -eq 1 ]; then
-        COMPREPLY=( $(compgen -W "--upgrade -u --uninstall --version -v" -- "$cur") $(compgen -c -- "$cur") )
+        COMPREPLY=( $(compgen -W "--help -h --upgrade -u --install -i --uninstall --version -v" -- "$cur") $(compgen -c -- "$cur") )
         return 0
     fi
 

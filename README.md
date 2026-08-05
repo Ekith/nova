@@ -38,7 +38,9 @@ Le processus est aussi redémarré automatiquement s'il s'arrête tout seul.
 ## Gestion
 
 ```bash
-nova --upgrade    # ou nova -u : met à jour nova vers la dernière version
-nova --uninstall  # désinstalle nova
-nova --version    # ou nova -v : affiche la version installée
+nova --help               # ou nova -h : affiche l'aide
+nova --upgrade            # ou nova -u : met à jour nova vers la dernière version
+nova --install <version>  # ou nova -i <version> : installe une version précise
+nova --uninstall          # désinstalle nova
+nova --version            # ou nova -v : affiche la version installée
 ```
