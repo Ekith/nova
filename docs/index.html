@@ -140,30 +140,30 @@ async function copyToClipboard(text) {
 }
 
 window.addEventListener('DOMContentLoaded', function() {
-  const copyButton = document.getElementById('copy-install');
-  const installCommand = document.getElementById('install-command');
+  document.querySelectorAll('.copy-btn[data-copy-target]').forEach(function(copyButton) {
+    const installCommand = document.getElementById(copyButton.getAttribute('data-copy-target'));
+    if (!installCommand) return;
 
-  if (!copyButton || !installCommand) return;
+    copyButton.addEventListener('click', async function() {
+      const text = installCommand.textContent.trim();
+      const copied = await copyToClipboard(text);
 
-  copyButton.addEventListener('click', async function() {
-    const text = installCommand.textContent.trim();
-    const copied = await copyToClipboard(text);
+      if (!copied) {
+        copyButton.setAttribute('aria-label', 'Échec de copie');
+        setTimeout(function() {
+          copyButton.setAttribute('aria-label', 'Copier la commande d\'installation');
+        }, 1200);
+        return;
+      }
 
-    if (!copied) {
-      copyButton.setAttribute('aria-label', 'Échec de copie');
+      copyButton.classList.add('is-copied');
+      copyButton.setAttribute('aria-label', 'Commande copiée');
+
       setTimeout(function() {
+        copyButton.classList.remove('is-copied');
         copyButton.setAttribute('aria-label', 'Copier la commande d\'installation');
       }, 1200);
-      return;
-    }
-
-    copyButton.classList.add('is-copied');
-    copyButton.setAttribute('aria-label', 'Commande copiée');
-
-    setTimeout(function() {
-      copyButton.classList.remove('is-copied');
-      copyButton.setAttribute('aria-label', 'Copier la commande d\'installation');
-    }, 1200);
+    });
   });
 });
 
@@ -179,10 +179,31 @@ window.addEventListener('DOMContentLoaded', function() {
   <div class="install-row">
     <div class="install">
       <div id="install-command" class="install-command">
-        curl -fsSL https://raw.githubusercontent.com/Ekith/nova/main/install.sh | bash
+        curl -fsSL https://raw.githubusercontent.com/Ekith/nova/release/install.sh | bash
       </div>
     </div>
-    <button id="copy-install" class="copy-btn" type="button" aria-label="Copier la commande d'installation">
+    <button class="copy-btn" data-copy-target="install-command" type="button" aria-label="Copier la commande d'installation">
+      <svg class="icon icon-copy" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>
+        <rect x="5" y="5" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>
+      </svg>
+      <svg class="icon icon-check" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 12.5L10 17.5L19 8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </button>
+  </div>
+
+  <h3>Installer une version précise</h3>
+
+  <p>Pour figer l'installation sur une version donnée plutôt que la dernière release :</p>
+
+  <div class="install-row">
+    <div class="install">
+      <div id="install-command-version" class="install-command">
+        curl -fsSL https://raw.githubusercontent.com/Ekith/nova/release/install.sh | bash -s -- 1.0.1
+      </div>
+    </div>
+    <button class="copy-btn" data-copy-target="install-command-version" type="button" aria-label="Copier la commande d'installation">
       <svg class="icon icon-copy" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>
         <rect x="5" y="5" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>

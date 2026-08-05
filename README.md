@@ -5,10 +5,18 @@ Lance une commande et la surveille en arrière-plan : redémarrage automatique s
 ## Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Ekith/nova/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Ekith/nova/release/install.sh | bash
 ```
 
 Installe `nova` dans `~/.local/bin` et sa complétion bash dans `~/.local/share/bash-completion/completions`.
+
+Pour installer une version précise (un tag existant, ex. `1.0.1`) plutôt que la dernière release :
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Ekith/nova/release/install.sh | bash -s -- 1.0.1
+```
+
+Si la version demandée n'existe pas, l'installation échoue.
 
 ## Usage
 

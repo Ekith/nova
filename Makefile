@@ -44,11 +44,11 @@ release:
 	new_version="$$major.$$minor.$$patch"; \
 	echo "$$new_version" > VERSION.txt; \
 	sed -i "s/^VERSION=\".*\"/VERSION=\"$$new_version\"/" nova.sh; \
-	git add VERSION.txt nova.sh; \
-	git commit -m "chore: bump version to $$new_version"; \
-	git checkout release; \
-	git merge --ff-only main; \
-	git tag "$$new_version"; \
-	git checkout main; \
+	git add VERSION.txt nova.sh && \
+	git commit -m "chore: bump version to $$new_version" && \
+	(git checkout release 2>/dev/null || git checkout -b release) && \
+	git merge --ff-only main && \
+	git tag "$$new_version" && \
+	git checkout main && \
 	git push origin main release --tags
 	@printf '\033[32mrelease OK : v%s taggée et poussée.\033[0m\n' "$$(cat VERSION.txt)"
