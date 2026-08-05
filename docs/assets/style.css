@@ -1,0 +1,194 @@
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #6b6b6b;
+  --code-bg: #f4f4f5;
+  --border: #e2e2e2;
+  --accent: #1a1a1a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --fg: #f0f0f0;
+    --muted: #9a9a9a;
+    --code-bg: #1e2126;
+    --border: #2c2f36;
+    --accent: #f0f0f0;
+  }
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+}
+main {
+  max-width: 640px;
+  width: 100%;
+}
+h1 {
+  font-size: 2.4rem;
+  margin-bottom: 0.2rem;
+}
+p.tagline {
+  color: var(--muted);
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+nav.site-nav {
+  display: flex;
+  gap: 1.4rem;
+  margin-bottom: 2rem;
+}
+nav.site-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid transparent;
+}
+nav.site-nav a:hover {
+  color: var(--fg);
+}
+nav.site-nav a[aria-current="page"] {
+  color: var(--fg);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+.install {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.95rem;
+  overflow: visible;
+  margin: 2rem 0;
+  display: inline-block;
+  width: fit-content;
+}
+.install-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.install-command {
+  white-space: nowrap;
+}
+.copy-btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg);
+  border-radius: 6px;
+  padding: 0.45rem;
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.02s ease;
+  flex-shrink: 0;
+}
+.copy-btn:hover {
+  background: color-mix(in srgb, var(--fg) 8%, transparent);
+}
+.copy-btn:active {
+  transform: translateY(1px);
+}
+.copy-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--fg) 35%, transparent);
+  outline-offset: 2px;
+}
+.copy-btn .icon {
+  width: 1rem;
+  height: 1rem;
+  display: none;
+}
+.copy-btn .icon-copy {
+  display: block;
+}
+.copy-btn.is-copied .icon-copy {
+  display: none;
+}
+.copy-btn.is-copied .icon-check {
+  display: block;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+td, th {
+  text-align: left;
+  padding: 0.4rem 0.8rem 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+a {
+  color: inherit;
+}
+
+/* Versions page */
+.version-list {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.version-item {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+}
+.version-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.version-name {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.version-badge {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  color: var(--muted);
+}
+.version-links {
+  margin-left: auto;
+  font-size: 0.9rem;
+}
+.version-links a {
+  color: var(--muted);
+  text-decoration: underline;
+}
+.version-links a:hover {
+  color: var(--fg);
+}
+.version-item .install {
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.85rem;
+}
+.version-item .install-row {
+  width: 100%;
+}
+.status-message {
+  color: var(--muted);
+  margin-top: 2rem;
+}
