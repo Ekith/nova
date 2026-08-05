@@ -172,6 +172,8 @@ a {
 .version-links {
   margin-left: auto;
   font-size: 0.9rem;
+  display: inline-flex;
+  gap: 0.9rem;
 }
 .version-links a {
   color: var(--muted);
@@ -191,4 +193,18 @@ a {
 .status-message {
   color: var(--muted);
   margin-top: 2rem;
+}
+
+/* Changelog page */
+.changelog-content {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem 1.4rem;
+  margin: 1.5rem 0 0;
 }

@@ -7,6 +7,7 @@
 <title>Nova — Versions</title>
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/copy.js" defer></script>
+<script src="assets/versions-api.js"></script>
 </head>
 <body>
 <main>
@@ -26,37 +27,16 @@
 
 <script>
 (function() {
-  const REPO = 'Ekith/nova';
+  const REPO = NOVA_REPO;
   const listEl = document.getElementById('version-list');
   const statusEl = document.getElementById('version-status');
-
-  function parseVersion(tag) {
-    const parts = tag.split('.').map(function(n) { return parseInt(n, 10); });
-    return [parts[0] || 0, parts[1] || 0, parts[2] || 0];
-  }
-
-  function compareVersions(a, b) {
-    const va = parseVersion(a.name);
-    const vb = parseVersion(b.name);
-    for (let i = 0; i < 3; i++) {
-      if (va[i] !== vb[i]) return vb[i] - va[i];
-    }
-    return 0;
-  }
-
-  function escapeHtml(str) {
-    return str.replace(/[&<>"']/g, function(c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
+  const escapeHtml = novaEscapeHtml;
 
   function renderVersions(tags) {
     if (tags.length === 0) {
       statusEl.textContent = 'Aucune version publiée pour le moment.';
       return;
     }
-
-    tags.sort(compareVersions);
 
     listEl.innerHTML = tags.map(function(tag, index) {
       const name = escapeHtml(tag.name);
@@ -71,6 +51,7 @@
             (isLatest ? '<span class="version-badge">Dernière</span>' : '') +
             '<span class="version-links">' +
               '<a href="https://github.com/' + REPO + '/tree/' + encodeURIComponent(tag.name) + '">Code source</a>' +
+              '<a href="changelog.html?version=' + encodeURIComponent(tag.name) + '">Changelog</a>' +
             '</span>' +
           '</div>' +
           '<div class="install-row">' +
@@ -95,13 +76,7 @@
     if (window.wireCopyButtons) wireCopyButtons(listEl);
   }
 
-  fetch('https://api.github.com/repos/' + REPO + '/tags?per_page=100', {
-    headers: { Accept: 'application/vnd.github+json' }
-  })
-    .then(function(res) {
-      if (!res.ok) throw new Error('GitHub API error: ' + res.status);
-      return res.json();
-    })
+  novaFetchTags()
     .then(renderVersions)
     .catch(function(err) {
       statusEl.textContent = 'Impossible de charger les versions depuis GitHub (' + err.message + ').';
