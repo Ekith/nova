@@ -10,7 +10,7 @@
 <script src="assets/versions-api.js"></script>
 </head>
 <body>
-<main>
+<main class="wide">
   <nav class="site-nav">
     <a href="index.html">Accueil</a>
     <a href="versions.html" aria-current="page">Versions</a>
@@ -42,7 +42,7 @@
       const name = escapeHtml(tag.name);
       const isLatest = index === 0;
       const installId = 'install-' + name.replace(/[^a-zA-Z0-9]/g, '-');
-      const installCmd = 'curl -fsSL https://raw.githubusercontent.com/' + REPO + '/release/install.sh | bash -s -- ' + name;
+      const installCmd = 'curl -fsSL https://raw.githubusercontent.com/' + REPO + '/release/install.sh \\\n| bash -s -- ' + name;
 
       return (
         '<li class="version-item">' +
@@ -54,10 +54,8 @@
               '<a href="changelog.html?version=' + encodeURIComponent(tag.name) + '">Changelog</a>' +
             '</span>' +
           '</div>' +
-          '<div class="install-row">' +
-            '<div class="install">' +
-              '<div id="' + installId + '" class="install-command">' + escapeHtml(installCmd) + '</div>' +
-            '</div>' +
+          '<div class="install install--copyable">' +
+            '<div id="' + installId + '" class="install-command">' + escapeHtml(installCmd) + '</div>' +
             '<button class="copy-btn" data-copy-target="' + installId + '" type="button" aria-label="Copier la commande d\'installation">' +
               '<svg class="icon icon-copy" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
                 '<rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>' +
