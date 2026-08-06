@@ -44,7 +44,8 @@ release:
 	new_version="$$major.$$minor.$$patch"; \
 	echo "$$new_version" > VERSION.txt; \
 	sed -i "s/^VERSION=\".*\"/VERSION=\"$$new_version\"/" nova.sh; \
-	git add VERSION.txt nova.sh && \
+	sed -i "1s/^## Changelog — .*/## Changelog — $$new_version ($$(date +%F))/" CHANGELOG.md; \
+	git add VERSION.txt nova.sh CHANGELOG.md && \
 	git commit -m "chore: bump version to $$new_version" && \
 	(git checkout release 2>/dev/null || git checkout -b release) && \
 	git merge --ff-only main && \
