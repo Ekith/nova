@@ -1,4 +1,4 @@
-## Changelog — 1.1.0..HEAD (2026-08-06)
+## Changelog — 1.1.0..1.1.1 (2026-08-06)
 
 ### Ajouts
 - Page des versions avec récupération dynamique du numéro de version
