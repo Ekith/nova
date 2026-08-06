@@ -7,6 +7,7 @@
 <title>Nova — Changelog</title>
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/versions-api.js"></script>
+<script src="assets/markdown.js"></script>
 </head>
 <body>
 <main>
@@ -20,7 +21,7 @@
   <h1 id="changelog-title">Changelog</h1>
   <p id="changelog-subtitle" class="tagline"></p>
 
-  <pre id="changelog-content" class="changelog-content" hidden></pre>
+  <div id="changelog-content" class="changelog-content" hidden></div>
   <p id="changelog-status" class="status-message">Chargement du changelog…</p>
 </main>
 
@@ -68,7 +69,7 @@
           statusEl.textContent = 'Le fichier CHANGELOG.md existe mais est vide.';
           return;
         }
-        contentEl.textContent = text;
+        contentEl.innerHTML = novaRenderMarkdown(text);
         contentEl.hidden = false;
         statusEl.remove();
       });
@@ -107,7 +108,7 @@
           statusEl.textContent = 'Le fichier ' + filename + ' existe mais est vide.';
           return;
         }
-        contentEl.textContent = text;
+        contentEl.innerHTML = novaRenderMarkdown(text);
         contentEl.hidden = false;
         statusEl.remove();
       })
