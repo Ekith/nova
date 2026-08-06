@@ -1,4 +1,4 @@
-## Changelog — Non publié
+## Changelog — 1.1.2 (2026-08-06)
 
 ### Corrections
 - `kill_process` envoie désormais un `SIGKILL` de secours si le `SIGTERM` initial n'a pas suffi à arrêter le processus et ses enfants dans le délai imparti
