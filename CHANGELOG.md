@@ -1,4 +1,9 @@
-## Changelog — 1.1.0..1.1.1 (2026-08-06)
+## Changelog — Non publié
+
+### Corrections
+- `kill_process` envoie désormais un `SIGKILL` de secours si le `SIGTERM` initial n'a pas suffi à arrêter le processus et ses enfants dans le délai imparti
+
+## Changelog — 1.1.1 (2026-08-06)
 
 ### Ajouts
 - Page des versions avec récupération dynamique du numéro de version
@@ -14,7 +19,3 @@
 - Précision dans le message de lancement et la doc : `Ctrl+C` redémarre le processus (comme `R`), il n'arrête pas nova
 - `nova --uninstall` demande désormais confirmation avant de supprimer les fichiers installés
 - Message d'usage traduit en français, code mort supprimé
-
-### Docs
-
-### Autres

@@ -103,7 +103,19 @@ kill_process() {
 
     pids=$(get_all_pids "$process_pid")
 
-    kill $pids 2>/dev/null
+    kill -TERM $pids 2>/dev/null
+
+    for _ in 1 2 3 4 5; do
+        alive=""
+        for p in $pids; do
+            kill -0 "$p" 2>/dev/null && alive="$alive $p"
+        done
+        [ -z "$alive" ] && return
+        sleep 0.2
+    done
+
+    echo "Force killing remaining process(es):$alive"
+    kill -KILL $alive 2>/dev/null
 }
 
 clean_up() {
