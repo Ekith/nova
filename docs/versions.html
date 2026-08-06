@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="assets/favicon.ico">
+<title>Nova — Versions</title>
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/copy.js" defer></script>
+<script src="assets/versions-api.js"></script>
+</head>
+<body>
+<main class="wide">
+  <nav class="site-nav">
+    <a href="index.html">Accueil</a>
+    <a href="versions.html" aria-current="page">Versions</a>
+  </nav>
+
+  <h1>Versions</h1>
+  <p class="tagline">Liste des versions publiées, récupérée depuis les tags GitHub du dépôt.</p>
+
+  <ul id="version-list" class="version-list" aria-live="polite"></ul>
+  <p id="version-status" class="status-message">Chargement des versions…</p>
+
+  <p><a href="https://github.com/Ekith/nova/tags">Voir tous les tags sur GitHub</a></p>
+</main>
+
+<script>
+(function() {
+  const REPO = NOVA_REPO;
+  const listEl = document.getElementById('version-list');
+  const statusEl = document.getElementById('version-status');
+  const escapeHtml = novaEscapeHtml;
+
+  function renderVersions(tags) {
+    if (tags.length === 0) {
+      statusEl.textContent = 'Aucune version publiée pour le moment.';
+      return;
+    }
+
+    listEl.innerHTML = tags.map(function(tag, index) {
+      const name = escapeHtml(tag.name);
+      const isLatest = index === 0;
+      const installId = 'install-' + name.replace(/[^a-zA-Z0-9]/g, '-');
+      const installCmd = 'curl -fsSL https://raw.githubusercontent.com/' + REPO + '/release/install.sh \\\n| bash -s -- ' + name;
+
+      return (
+        '<li class="version-item">' +
+          '<div class="version-header">' +
+            '<span class="version-name">' + name + '</span>' +
+            (isLatest ? '<span class="version-badge">Dernière</span>' : '') +
+            '<span class="version-links">' +
+              '<a href="https://github.com/' + REPO + '/tree/' + encodeURIComponent(tag.name) + '">Code source</a>' +
+              '<a href="changelog.html?version=' + encodeURIComponent(tag.name) + '">Changelog</a>' +
+            '</span>' +
+          '</div>' +
+          '<div class="install install--copyable">' +
+            '<div id="' + installId + '" class="install-command">' + escapeHtml(installCmd) + '</div>' +
+            '<button class="copy-btn" data-copy-target="' + installId + '" type="button" aria-label="Copier la commande d\'installation">' +
+              '<svg class="icon icon-copy" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+                '<rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>' +
+                '<rect x="5" y="5" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>' +
+              '</svg>' +
+              '<svg class="icon icon-check" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+                '<path d="M5 12.5L10 17.5L19 8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>' +
+              '</svg>' +
+            '</button>' +
+          '</div>' +
+        '</li>'
+      );
+    }).join('');
+
+    statusEl.remove();
+    if (window.wireCopyButtons) wireCopyButtons(listEl);
+  }
+
+  novaFetchTags()
+    .then(renderVersions)
+    .catch(function(err) {
+      statusEl.textContent = 'Impossible de charger les versions depuis GitHub (' + err.message + ').';
+    });
+})();
+</script>
+</body>
+</html>

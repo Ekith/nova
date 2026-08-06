@@ -5,183 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="assets/favicon.ico">
 <title>Nova</title>
-<style>
-  :root {
-    color-scheme: light dark;
-    --bg: #ffffff;
-    --fg: #1a1a1a;
-    --muted: #6b6b6b;
-    --code-bg: #f4f4f5;
-    --border: #e2e2e2;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #14161a;
-      --fg: #f0f0f0;
-      --muted: #9a9a9a;
-      --code-bg: #1e2126;
-      --border: #2c2f36;
-    }
-  }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--fg);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    padding: 4rem 1.5rem;
-  }
-  main {
-    max-width: 640px;
-    width: 100%;
-  }
-  h1 {
-    font-size: 2.4rem;
-    margin-bottom: 0.2rem;
-  }
-  p.tagline {
-    color: var(--muted);
-    margin-top: 0;
-    font-size: 1.1rem;
-  }
-  .install {
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1rem 1.2rem;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 0.95rem;
-    overflow: visible;
-    margin: 2rem 0;
-    display: inline-block;
-    width: fit-content;
-  }
-  .install-row {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-  }
-  .install-command {
-    white-space: nowrap;
-  }
-  .copy-btn {
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--fg);
-    border-radius: 6px;
-    padding: 0.45rem;
-    width: 2rem;
-    height: 2rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.15s ease, transform 0.02s ease;
-    flex-shrink: 0;
-  }
-  .copy-btn:hover {
-    background: color-mix(in srgb, var(--fg) 8%, transparent);
-  }
-  .copy-btn:active {
-    transform: translateY(1px);
-  }
-  .copy-btn:focus-visible {
-    outline: 2px solid color-mix(in srgb, var(--fg) 35%, transparent);
-    outline-offset: 2px;
-  }
-  .copy-btn .icon {
-    width: 1rem;
-    height: 1rem;
-    display: none;
-  }
-  .copy-btn .icon-copy {
-    display: block;
-  }
-  .copy-btn.is-copied .icon-copy {
-    display: none;
-  }
-  .copy-btn.is-copied .icon-check {
-    display: block;
-  }
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-  td, th {
-    text-align: left;
-    padding: 0.4rem 0.8rem 0.4rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  a {
-    color: inherit;
-  }
-</style>
-<script>
-
-async function copyToClipboard(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch (_) {
-    const tempTextarea = document.createElement('textarea');
-    tempTextarea.value = text;
-    tempTextarea.setAttribute('readonly', '');
-    tempTextarea.style.position = 'absolute';
-    tempTextarea.style.left = '-9999px';
-    document.body.appendChild(tempTextarea);
-    tempTextarea.select();
-    const success = document.execCommand('copy');
-    document.body.removeChild(tempTextarea);
-    return success;
-  }
-}
-
-window.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.copy-btn[data-copy-target]').forEach(function(copyButton) {
-    const installCommand = document.getElementById(copyButton.getAttribute('data-copy-target'));
-    if (!installCommand) return;
-
-    copyButton.addEventListener('click', async function() {
-      const text = installCommand.textContent.trim();
-      const copied = await copyToClipboard(text);
-
-      if (!copied) {
-        copyButton.setAttribute('aria-label', 'Échec de copie');
-        setTimeout(function() {
-          copyButton.setAttribute('aria-label', 'Copier la commande d\'installation');
-        }, 1200);
-        return;
-      }
-
-      copyButton.classList.add('is-copied');
-      copyButton.setAttribute('aria-label', 'Commande copiée');
-
-      setTimeout(function() {
-        copyButton.classList.remove('is-copied');
-        copyButton.setAttribute('aria-label', 'Copier la commande d\'installation');
-      }, 1200);
-    });
-  });
-});
-
-</script>
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/copy.js" defer></script>
 </head>
 <body>
 <main>
+  <nav class="site-nav">
+    <a href="index.html" aria-current="page">Accueil</a>
+    <a href="versions.html">Versions</a>
+  </nav>
+
   <h1><img src="assets/logo.svg" alt="" width="40" height="40" style="vertical-align: middle; margin-right: 0.5rem;">Nova</h1>
   <p class="tagline">Lance une commande, surveille-la, redémarre-la à la volée.</p>
 
   <h2>Installation</h2>
 
-  <div class="install-row">
-    <div class="install">
-      <div id="install-command" class="install-command">
-        curl -fsSL https://raw.githubusercontent.com/Ekith/nova/release/install.sh | bash
-      </div>
-    </div>
+  <div class="install install--copyable">
+    <div id="install-command" class="install-command">curl -fsSL https://raw.githubusercontent.com/Ekith/nova/release/install.sh \
+| bash</div>
     <button class="copy-btn" data-copy-target="install-command" type="button" aria-label="Copier la commande d'installation">
       <svg class="icon icon-copy" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>
@@ -195,14 +36,11 @@ window.addEventListener('DOMContentLoaded', function() {
 
   <h3>Installer une version précise</h3>
 
-  <p>Pour figer l'installation sur une version donnée plutôt que la dernière release :</p>
+  <p>Pour figer l'installation sur une version donnée plutôt que la dernière release (voir la <a href="versions.html">liste des versions</a>) :</p>
 
-  <div class="install-row">
-    <div class="install">
-      <div id="install-command-version" class="install-command">
-        curl -fsSL https://raw.githubusercontent.com/Ekith/nova/release/install.sh | bash -s -- 1.0.1
-      </div>
-    </div>
+  <div class="install install--copyable">
+    <div id="install-command-version" class="install-command">curl -fsSL https://raw.githubusercontent.com/Ekith/nova/release/install.sh \
+| bash -s -- &lt;version&gt;</div>
     <button class="copy-btn" data-copy-target="install-command-version" type="button" aria-label="Copier la commande d'installation">
       <svg class="icon icon-copy" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"></rect>
@@ -233,9 +71,11 @@ window.addEventListener('DOMContentLoaded', function() {
 
   <table>
     <tr><th>Commande</th><th>Action</th></tr>
+    <tr><td>nova --help / -h</td><td>Affiche l'aide</td></tr>
     <tr><td>nova --upgrade / -u</td><td>Met à jour nova vers la dernière version</td></tr>
     <tr><td>nova --uninstall</td><td>Désinstalle nova</td></tr>
     <tr><td>nova --version / -v</td><td>Affiche la version installée</td></tr>
+    <tr><td>nova --install / -i &lt;version&gt;</td><td>Installe une version spécifique de nova</td></tr>
   </table>
 
   <p><a href="https://github.com/Ekith/nova">Code source sur GitHub</a></p>

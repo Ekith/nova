@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="assets/favicon.ico">
+<title>Nova — Changelog</title>
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/versions-api.js"></script>
+<script src="assets/markdown.js"></script>
+</head>
+<body>
+<main>
+  <nav class="site-nav">
+    <a href="index.html">Accueil</a>
+    <a href="versions.html" aria-current="page">Versions</a>
+  </nav>
+
+  <p><a href="versions.html">&larr; Retour aux versions</a></p>
+
+  <h1 id="changelog-title">Changelog</h1>
+  <p id="changelog-subtitle" class="tagline"></p>
+
+  <div id="changelog-content" class="changelog-content" hidden></div>
+  <p id="changelog-status" class="status-message">Chargement du changelog…</p>
+</main>
+
+<script>
+(function() {
+  const REPO = NOVA_REPO;
+  // Ordre d'essai : conventions de nommage les plus courantes.
+  const CANDIDATE_FILENAMES = ['CHANGELOG.md', 'CHANGELOG.txt', 'CHANGELOG'];
+
+  const titleEl = document.getElementById('changelog-title');
+  const subtitleEl = document.getElementById('changelog-subtitle');
+  const contentEl = document.getElementById('changelog-content');
+  const statusEl = document.getElementById('changelog-status');
+  const escapeHtml = novaEscapeHtml;
+
+  const version = new URLSearchParams(window.location.search).get('version');
+
+  if (!version) {
+    statusEl.textContent = 'Aucune version indiquée. Reviens à la liste des versions pour en choisir une.';
+    throw new Error('missing version param');
+  }
+
+  // version=0.0.0 : mode caché, non lié depuis l'UI. Affiche le CHANGELOG.md
+  // le plus récent toutes branches confondues, pour suivre l'avancement
+  // de la prochaine version avant qu'elle ne soit taguée.
+  if (version === '0.0.0') {
+    titleEl.textContent = 'Changelog — prochaine version';
+    document.title = 'Nova — Changelog (prochaine version)';
+    subtitleEl.textContent = 'Dernier CHANGELOG.md trouvé, toutes branches confondues.';
+
+    novaFindLatestChangelogCommit().then(function(latest) {
+      if (!latest) {
+        statusEl.textContent = 'Aucun CHANGELOG.md trouvé sur aucune branche.';
+        return;
+      }
+
+      subtitleEl.textContent = 'Dernier CHANGELOG.md trouvé, toutes branches confondues (branche « ' + latest.branch + ' »).';
+
+      const url = 'https://raw.githubusercontent.com/' + REPO + '/' + encodeURIComponent(latest.sha) + '/CHANGELOG.md';
+      return fetch(url).then(function(res) {
+        if (!res.ok) throw new Error('GitHub error: ' + res.status);
+        return res.text();
+      }).then(function(text) {
+        if (!text.trim()) {
+          statusEl.textContent = 'Le fichier CHANGELOG.md existe mais est vide.';
+          return;
+        }
+        contentEl.innerHTML = novaRenderMarkdown(text);
+        contentEl.hidden = false;
+        statusEl.remove();
+      });
+    }).catch(function(err) {
+      statusEl.textContent = 'Impossible de charger le changelog depuis GitHub (' + err.message + ').';
+    });
+
+    return;
+  }
+
+  titleEl.textContent = 'Changelog — ' + version;
+  document.title = 'Nova — Changelog ' + version;
+  subtitleEl.textContent = 'Fichier CHANGELOG pour la version ' + version + '.';
+
+  function tryFilename(index) {
+    if (index >= CANDIDATE_FILENAMES.length) {
+      statusEl.innerHTML = 'Aucun fichier CHANGELOG n\'existe pour la version ' + escapeHtml(version) + '.';
+      return;
+    }
+
+    const filename = CANDIDATE_FILENAMES[index];
+    const url = 'https://raw.githubusercontent.com/' + REPO + '/' + encodeURIComponent(version) + '/' + filename;
+
+    fetch(url)
+      .then(function(res) {
+        if (res.status === 404) {
+          tryFilename(index + 1);
+          return null;
+        }
+        if (!res.ok) throw new Error('GitHub error: ' + res.status);
+        return res.text();
+      })
+      .then(function(text) {
+        if (text === null) return;
+        if (!text.trim()) {
+          statusEl.textContent = 'Le fichier ' + filename + ' existe mais est vide.';
+          return;
+        }
+        contentEl.innerHTML = novaRenderMarkdown(text);
+        contentEl.hidden = false;
+        statusEl.remove();
+      })
+      .catch(function(err) {
+        statusEl.textContent = 'Impossible de charger le changelog depuis GitHub (' + err.message + ').';
+      });
+  }
+
+  tryFilename(0);
+})();
+</script>
+</body>
+</html>
