@@ -14,6 +14,7 @@
   <nav class="site-nav">
     <a href="index.html">Accueil</a>
     <a href="versions.html" aria-current="page">Versions</a>
+    <a href="changelog.html">Changelog</a>
   </nav>
 
   <h1>Versions</h1>
@@ -51,7 +52,6 @@
             (isLatest ? '<span class="version-badge">Dernière</span>' : '') +
             '<span class="version-links">' +
               '<a href="https://github.com/' + REPO + '/tree/' + encodeURIComponent(tag.name) + '">Code source</a>' +
-              '<a href="changelog.html?version=' + encodeURIComponent(tag.name) + '">Changelog</a>' +
             '</span>' +
           '</div>' +
           '<div class="install install--copyable">' +
