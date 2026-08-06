@@ -53,13 +53,10 @@ fi
 
 
 # Get all arguments passed to the script
-args="$@"
+echo "Arguments passed to the script: $*"
 
-echo "Arguments passed to the script: $args"
-
-
-# Build th command to run the process with the passed arguments
-command="$args"
+# Keep the command as an array so arguments with spaces/quotes survive
+cmd=("$@")
 
 reloader_id=$$
 
@@ -78,7 +75,7 @@ launch_process() {
     echo ""
     echo ""
     echo "Launching process..."
-    $command &
+    "${cmd[@]}" &
     process_pid=$!
     echo "Process started with PID: $process_pid"
     echo_information_keybind

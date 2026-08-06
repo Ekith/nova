@@ -5,6 +5,7 @@
 - Page de changelog
 
 ### Corrections
+- Les arguments de la commande lancée (espaces, guillemets) ne sont plus fractionnés au relancement du processus
 
 ### Améliorations
 - Amélioration de l'ergonomie et du style des commandes d'installation
