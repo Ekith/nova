@@ -34,6 +34,11 @@ case "${1:-}" in
         exit $?
         ;;
     --uninstall)
+        read -r -p "Désinstaller nova (supprime $BIN_DIR/nova et sa complétion) ? [y/N] " confirm
+        case "$confirm" in
+            [Yy]|[Yy][Ee][Ss]) ;;
+            *) echo "Annulé."; exit 0 ;;
+        esac
         echo "Uninstalling nova..."
         rm -f "$BIN_DIR/nova"
         rm -f "$COMPLETION_DIR/nova"
@@ -47,21 +52,16 @@ case "${1:-}" in
 esac
 
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 <command_to_run>"
+    echo "Usage: nova <commande_à_lancer>"
     exit 1
 fi
 
 
 # Get all arguments passed to the script
-args="$@"
+echo "Arguments passed to the script: $*"
 
-echo "Arguments passed to the script: $args"
-
-
-# Build th command to run the process with the passed arguments
-command="$args"
-
-reloader_id=$$
+# Keep the command as an array so arguments with spaces/quotes survive
+cmd=("$@")
 
 is_run=true
 
@@ -70,7 +70,7 @@ echo_information_keybind() {
     echo "Press [K] to stop nova."
     echo "Press [C] to clear the console."
     echo "Press [N] to clean up the process (kill and restart)."
-    echo "Press [R] to restart the process."
+    echo "Press [R] or [Ctrl+C] to restart the process."
 }
 
 # Function to launch the process
@@ -78,7 +78,7 @@ launch_process() {
     echo ""
     echo ""
     echo "Launching process..."
-    $command &
+    "${cmd[@]}" &
     process_pid=$!
     echo "Process started with PID: $process_pid"
     echo_information_keybind
@@ -95,11 +95,15 @@ get_all_pids() {
 }
 
 kill_process() {
+    if ! kill -0 "$process_pid" 2>/dev/null; then
+        return
+    fi
+
     echo "Killing process with PID: $process_pid"
 
     pids=$(get_all_pids "$process_pid")
 
-    kill $pids
+    kill $pids 2>/dev/null
 }
 
 clean_up() {

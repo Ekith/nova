@@ -28,7 +28,7 @@ Une fois lancé :
 
 | Touche | Action |
 | --- | --- |
-| `R` | Redémarrer le processus |
+| `R` ou `Ctrl+C` | Redémarrer le processus |
 | `K` | Arrêter nova |
 | `C` | Effacer la console |
 | `N` | Nettoyer puis redémarrer le processus |
@@ -41,6 +41,6 @@ Le processus est aussi redémarré automatiquement s'il s'arrête tout seul.
 nova --help               # ou nova -h : affiche l'aide
 nova --upgrade            # ou nova -u : met à jour nova vers la dernière version
 nova --install <version>  # ou nova -i <version> : installe une version précise
-nova --uninstall          # désinstalle nova
+nova --uninstall          # désinstalle nova (demande confirmation)
 nova --version            # ou nova -v : affiche la version installée
 ```
