@@ -34,6 +34,11 @@ case "${1:-}" in
         exit $?
         ;;
     --uninstall)
+        read -r -p "Désinstaller nova (supprime $BIN_DIR/nova et sa complétion) ? [y/N] " confirm
+        case "$confirm" in
+            [Yy]|[Yy][Ee][Ss]) ;;
+            *) echo "Annulé."; exit 0 ;;
+        esac
         echo "Uninstalling nova..."
         rm -f "$BIN_DIR/nova"
         rm -f "$COMPLETION_DIR/nova"
@@ -47,7 +52,7 @@ case "${1:-}" in
 esac
 
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 <command_to_run>"
+    echo "Usage: nova <commande_à_lancer>"
     exit 1
 fi
 
@@ -57,8 +62,6 @@ echo "Arguments passed to the script: $*"
 
 # Keep the command as an array so arguments with spaces/quotes survive
 cmd=("$@")
-
-reloader_id=$$
 
 is_run=true
 
@@ -92,11 +95,15 @@ get_all_pids() {
 }
 
 kill_process() {
+    if ! kill -0 "$process_pid" 2>/dev/null; then
+        return
+    fi
+
     echo "Killing process with PID: $process_pid"
 
     pids=$(get_all_pids "$process_pid")
 
-    kill $pids
+    kill $pids 2>/dev/null
 }
 
 clean_up() {

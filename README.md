@@ -41,6 +41,6 @@ Le processus est aussi redémarré automatiquement s'il s'arrête tout seul.
 nova --help               # ou nova -h : affiche l'aide
 nova --upgrade            # ou nova -u : met à jour nova vers la dernière version
 nova --install <version>  # ou nova -i <version> : installe une version précise
-nova --uninstall          # désinstalle nova
+nova --uninstall          # désinstalle nova (demande confirmation)
 nova --version            # ou nova -v : affiche la version installée
 ```
