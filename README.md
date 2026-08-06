@@ -28,7 +28,7 @@ Une fois lancé :
 
 | Touche | Action |
 | --- | --- |
-| `R` | Redémarrer le processus |
+| `R` ou `Ctrl+C` | Redémarrer le processus |
 | `K` | Arrêter nova |
 | `C` | Effacer la console |
 | `N` | Nettoyer puis redémarrer le processus |

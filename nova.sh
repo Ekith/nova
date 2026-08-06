@@ -70,7 +70,7 @@ echo_information_keybind() {
     echo "Press [K] to stop nova."
     echo "Press [C] to clear the console."
     echo "Press [N] to clean up the process (kill and restart)."
-    echo "Press [R] to restart the process."
+    echo "Press [R] or [Ctrl+C] to restart the process."
 }
 
 # Function to launch the process

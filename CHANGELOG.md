@@ -9,6 +9,7 @@
 ### Améliorations
 - Amélioration de l'ergonomie et du style des commandes d'installation
 - Ajout des descriptions de commandes dans le tableau d'utilisation de la page d'accueil
+- Précision dans le message de lancement et la doc : `Ctrl+C` redémarre le processus (comme `R`), il n'arrête pas nova
 
 ### Docs
 
