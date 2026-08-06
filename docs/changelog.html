@@ -43,6 +43,42 @@
     throw new Error('missing version param');
   }
 
+  // version=0.0.0 : mode caché, non lié depuis l'UI. Affiche le CHANGELOG.md
+  // le plus récent toutes branches confondues, pour suivre l'avancement
+  // de la prochaine version avant qu'elle ne soit taguée.
+  if (version === '0.0.0') {
+    titleEl.textContent = 'Changelog — prochaine version';
+    document.title = 'Nova — Changelog (prochaine version)';
+    subtitleEl.textContent = 'Dernier CHANGELOG.md trouvé, toutes branches confondues.';
+
+    novaFindLatestChangelogCommit().then(function(latest) {
+      if (!latest) {
+        statusEl.textContent = 'Aucun CHANGELOG.md trouvé sur aucune branche.';
+        return;
+      }
+
+      subtitleEl.textContent = 'Dernier CHANGELOG.md trouvé, toutes branches confondues (branche « ' + latest.branch + ' »).';
+
+      const url = 'https://raw.githubusercontent.com/' + REPO + '/' + encodeURIComponent(latest.sha) + '/CHANGELOG.md';
+      return fetch(url).then(function(res) {
+        if (!res.ok) throw new Error('GitHub error: ' + res.status);
+        return res.text();
+      }).then(function(text) {
+        if (!text.trim()) {
+          statusEl.textContent = 'Le fichier CHANGELOG.md existe mais est vide.';
+          return;
+        }
+        contentEl.textContent = text;
+        contentEl.hidden = false;
+        statusEl.remove();
+      });
+    }).catch(function(err) {
+      statusEl.textContent = 'Impossible de charger le changelog depuis GitHub (' + err.message + ').';
+    });
+
+    return;
+  }
+
   titleEl.textContent = 'Changelog — ' + version;
   document.title = 'Nova — Changelog ' + version;
   subtitleEl.textContent = 'Fichier CHANGELOG pour la version ' + version + '.';
