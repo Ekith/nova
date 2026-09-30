@@ -1,4 +1,4 @@
-## Changelog — Non publié
+## Changelog — 1.2.0 (2026-09-30)
 
 ### Ajouts
 - Redémarrage du processus depuis un autre terminal avec `kill -USR1 <pid>`, y compris quand nova tourne en arrière-plan
