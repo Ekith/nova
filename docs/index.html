@@ -68,6 +68,16 @@
     <tr><td>N</td><td>Nettoyer puis redémarrer le processus</td></tr>
   </table>
 
+  <p>nova affiche son PID au démarrage. Depuis un autre terminal, des signaux permettent de le piloter sans passer par le clavier :</p>
+
+  <table>
+    <tr><th>Signal</th><th>Action</th></tr>
+    <tr><td>kill -USR1 &lt;pid&gt;</td><td>Redémarrer le processus</td></tr>
+    <tr><td>kill &lt;pid&gt;</td><td>Arrêter nova (et le processus lancé)</td></tr>
+  </table>
+
+  <p><code>kill -INT &lt;pid&gt;</code> redémarre aussi le processus (équivalent de Ctrl+C), mais uniquement si nova a été lancé au premier plan : lancé en arrière-plan, il ignore <code>SIGINT</code>. <code>SIGUSR1</code> fonctionne dans les deux cas.</p>
+
   <h2>Gestion</h2>
 
   <table>

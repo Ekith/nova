@@ -17,6 +17,11 @@ case "${1:-}" in
         echo "  -u, --upgrade            Met à jour nova vers la dernière release"
         echo "  -i, --install <version>  Installe une version précise de nova"
         echo "      --uninstall          Désinstalle nova"
+        echo ""
+        echo "Signaux (depuis un autre terminal, PID affiché au démarrage):"
+        echo "  kill -USR1 <pid>         Redémarre le processus"
+        echo "  kill -INT <pid>          Redémarre le processus (nova au premier plan uniquement)"
+        echo "  kill <pid>               Arrête nova et le processus lancé"
         exit 0
         ;;
     --upgrade|-u)
@@ -71,6 +76,7 @@ echo_information_keybind() {
     echo "Press [C] to clear the console."
     echo "Press [N] to clean up the process (kill and restart)."
     echo "Press [R] or [Ctrl+C] to restart the process."
+    echo "Send SIGUSR1 (kill -USR1 $$) to restart the process from another terminal."
 }
 
 # Function to launch the process
@@ -125,8 +131,30 @@ clean_up() {
     launch_process
 }
 
-# Handle ctrl+c to kill the process
-trap "kill_process" SIGINT
+# Run the action requested by a key press or a signal
+handle_action() {
+    case "$1" in
+        restart)
+            kill_process
+            echo "Process has stopped. Restarting..."
+            launch_process
+            ;;
+        stop)
+            kill $$
+            ;;
+        clear)
+            clear
+            ;;
+        clean)
+            clean_up
+            ;;
+    esac
+}
+
+# Signals only record the requested action, the main loop runs it.
+# This avoids nesting actions when a signal arrives mid-action.
+pending_action=""
+trap 'pending_action=restart' SIGINT SIGUSR1
 
 # Handle script exit to kill the process
 trap "kill_process" EXIT
@@ -144,23 +172,24 @@ while $is_run; do
         echo "Process has stopped. Restarting..."
         launch_process
     fi
+    # Keys use their own variable so they never overwrite a signal action
+    key_action=""
     if read -t 1 -n 1 key ; then
         case "$key" in
-            [Rr]) # Restart
-                kill_process
-                echo "Process has stopped. Restarting..."
-                launch_process
-                ;;
-            [Kk]) # Kill
-                kill $$
-                ;;
-            [Cc]) # Clear
-                clear
-                ;;
-            [Nn]) # New
-                clean_up
-                ;;
+            [Rr]) key_action=restart ;;
+            [Kk]) key_action=stop ;;
+            [Cc]) key_action=clear ;;
+            [Nn]) key_action=clean ;;
         esac
         key=""
+    fi
+    if [ -n "$pending_action" ]; then
+        # Bash runs traps between commands: reading and clearing in a
+        # single command ensures no signal is lost in between
+        action=$pending_action pending_action=""
+        handle_action "$action"
+    fi
+    if [ -n "$key_action" ]; then
+        handle_action "$key_action"
     fi
 done

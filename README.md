@@ -35,6 +35,17 @@ Une fois lancé :
 
 Le processus est aussi redémarré automatiquement s'il s'arrête tout seul.
 
+### Piloter nova depuis un autre terminal
+
+nova affiche son PID au démarrage (`Nova running (PID: ...)`). Des signaux permettent de le piloter sans passer par le clavier :
+
+| Signal | Action |
+| --- | --- |
+| `kill -USR1 <pid>` | Redémarrer le processus |
+| `kill <pid>` | Arrêter nova (et le processus lancé) |
+
+`kill -INT <pid>` redémarre aussi le processus (c'est l'équivalent de `Ctrl+C`), mais uniquement si nova a été lancé au premier plan : lancé en arrière-plan (`nova ... &`), il ignore `SIGINT`. `SIGUSR1` fonctionne dans les deux cas.
+
 ## Gestion
 
 ```bash
