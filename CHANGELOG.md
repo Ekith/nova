@@ -1,3 +1,13 @@
+## Changelog — Non publié
+
+### Ajouts
+- Redémarrage du processus depuis un autre terminal avec `kill -USR1 <pid>`, y compris quand nova tourne en arrière-plan
+- Section « Signaux » dans `nova --help`, rappel de `SIGUSR1` dans le message de lancement, et documentation du pilotage par signaux dans le README et la page d'accueil
+
+### Améliorations
+- Touches et signaux passent par une même fonction `handle_action` : un signal reçu pendant une action (redémarrage en cours, par exemple) est mis en attente puis exécuté, au lieu de s'imbriquer dans l'action en cours
+- Une action demandée par signal n'est plus perdue quand une touche est pressée au même moment : les deux s'exécutent l'une après l'autre
+
 ## Changelog — 1.1.2 (2026-08-06)
 
 ### Corrections
