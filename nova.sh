@@ -22,6 +22,10 @@ case "${1:-}" in
         echo "  kill -USR1 <pid>         Redémarre le processus"
         echo "  kill -INT <pid>          Redémarre le processus (nova au premier plan uniquement)"
         echo "  kill <pid>               Arrête nova et le processus lancé"
+        echo ""
+        echo "Logs:"
+        echo "  La sortie du processus est aussi écrite dans"
+        echo "  \${XDG_STATE_HOME:-~/.local/state}/nova/<pid>.log (PID de nova)"
         exit 0
         ;;
     --upgrade|-u)
@@ -70,6 +74,30 @@ cmd=("$@")
 
 is_run=true
 
+# One log file per nova instance, named after its PID
+log_dir="${XDG_STATE_HOME:-$HOME/.local/state}/nova"
+log_file="$log_dir/$$.log"
+log_retention_days=7
+
+# Remove logs of nova instances that are gone and older than the retention
+clean_old_logs() {
+    local f pid
+    find "$log_dir" -maxdepth 1 -name '*.log' -mtime +"$log_retention_days" 2>/dev/null |
+        while read -r f; do
+            pid=$(basename "$f" .log)
+            kill -0 "$pid" 2>/dev/null || rm -f "$f"
+        done
+}
+
+if command -v script >/dev/null 2>&1 && mkdir -p "$log_dir" 2>/dev/null; then
+    clean_old_logs
+    # A previous nova may have had the same PID: start from an empty file
+    : > "$log_file"
+else
+    echo "Warning: 'script' not found or $log_dir not writable, process output will not be logged." >&2
+    log_file=""
+fi
+
 echo_information_keybind() {
     echo "Nova running (PID: $$)."
     echo "Press [K] to stop nova."
@@ -84,9 +112,21 @@ launch_process() {
     echo ""
     echo ""
     echo "Launching process..."
-    "${cmd[@]}" &
+    if [ -n "$log_file" ]; then
+        echo "=== nova: process started at $(date '+%Y-%m-%d %H:%M:%S') ===" >> "$log_file"
+        # script runs the command in a pseudo-terminal, so the process keeps its
+        # colors and line buffering, and copies its output to the terminal and
+        # to the log file. It runs the command through $SHELL -c, so bash is
+        # forced to parse the quoting, then the user's shell is restored.
+        local quoted
+        quoted=$(printf '%q ' "${cmd[@]}")
+        SHELL=/bin/bash script -qfa -c "export SHELL=$(printf '%q' "${SHELL:-/bin/sh}"); exec $quoted" "$log_file" &
+    else
+        "${cmd[@]}" &
+    fi
     process_pid=$!
     echo "Process started with PID: $process_pid"
+    [ -n "$log_file" ] && echo "Logging process output to: $log_file"
     echo_information_keybind
 }
 
