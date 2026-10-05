@@ -1,4 +1,4 @@
-## Changelog — Non publié
+## Changelog — 1.3.0 (2026-10-05)
 
 ### Ajouts
 - La sortie du processus est aussi écrite dans un fichier de log par instance, `${XDG_STATE_HOME:-~/.local/state}/nova/<pid>.log` (PID de nova), avec une ligne repère à chaque (re)démarrage
