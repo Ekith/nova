@@ -78,6 +78,8 @@
 
   <p><code>kill -INT &lt;pid&gt;</code> redémarre aussi le processus (équivalent de Ctrl+C), mais uniquement si nova a été lancé au premier plan : lancé en arrière-plan, il ignore <code>SIGINT</code>. <code>SIGUSR1</code> fonctionne dans les deux cas.</p>
 
+  <p>En plus du terminal, la sortie du processus est écrite dans <code>~/.local/state/nova/&lt;pid&gt;.log</code> (ou <code>$XDG_STATE_HOME/nova/</code> si la variable est définie), où <code>&lt;pid&gt;</code> est le PID de nova. Chaque redémarrage y ajoute une ligne <code>=== nova: process started at &lt;date&gt; ===</code> suivie de la nouvelle sortie. Le processus garde ses couleurs : le fichier contient donc les codes couleur ANSI, que <code>less -R</code> affiche correctement. Les logs des instances arrêtées depuis plus de 7 jours sont supprimés automatiquement.</p>
+
   <h2>Gestion</h2>
 
   <table>

@@ -1,3 +1,11 @@
+## Changelog — Non publié
+
+### Ajouts
+- La sortie du processus est aussi écrite dans un fichier de log par instance, `${XDG_STATE_HOME:-~/.local/state}/nova/<pid>.log` (PID de nova), avec une ligne repère à chaque (re)démarrage
+- Le processus tourne dans un pseudo-terminal via `script` (util-linux) : il garde ses couleurs et sa sortie ligne par ligne. Sans `script`, nova fonctionne comme avant, sans log
+- Les logs des instances arrêtées depuis plus de 7 jours sont supprimés au lancement de nova
+- Section « Logs » dans `nova --help`, le README et la page d'accueil
+
 ## Changelog — 1.2.0 (2026-09-30)
 
 ### Ajouts

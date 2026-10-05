@@ -46,6 +46,12 @@ nova affiche son PID au démarrage (`Nova running (PID: ...)`). Des signaux perm
 
 `kill -INT <pid>` redémarre aussi le processus (c'est l'équivalent de `Ctrl+C`), mais uniquement si nova a été lancé au premier plan : lancé en arrière-plan (`nova ... &`), il ignore `SIGINT`. `SIGUSR1` fonctionne dans les deux cas.
 
+### Logs
+
+En plus du terminal, la sortie du processus est écrite dans `${XDG_STATE_HOME:-~/.local/state}/nova/<pid>.log`, où `<pid>` est le PID de nova. Le fichier est complété au fil des redémarrages, chacun étant précédé d'une ligne `=== nova: process started at <date> ===`. Les logs des instances arrêtées depuis plus de 7 jours sont supprimés au lancement suivant de nova.
+
+La copie passe par `script` (util-linux), qui fait tourner le processus dans un pseudo-terminal : il garde ses couleurs et affiche sa sortie au fil de l'eau, et le fichier contient donc les codes couleur ANSI (`less -R` les affiche correctement). Si `script` est absent, nova fonctionne comme avant, sans fichier de log.
+
 ## Gestion
 
 ```bash
